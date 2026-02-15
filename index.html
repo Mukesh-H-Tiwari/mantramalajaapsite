@@ -18,14 +18,15 @@
             font-family: 'Roboto', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
             line-height: 1.6;
             color: #2C1810;
-            background: linear-gradient(135deg, #F5E6D3 0%, #FEF9F0 100%);
+            background: linear-gradient(135deg, #F5E6D3 0%, #FEF9F0 50%, #F5E6D3 100%);
+            min-height: 100vh;
         }
 
         header {
-            background: linear-gradient(135deg, #FF6B35 0%, #FFD700 100%);
+            background: linear-gradient(135deg, #8B4513 0%, #D4B896 100%);
             color: white;
             padding: 2rem 0;
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            box-shadow: 0 4px 6px rgba(139, 69, 19, 0.2);
             position: sticky;
             top: 0;
             z-index: 100;
@@ -73,16 +74,18 @@
         .hero {
             text-align: center;
             padding: 4rem 2rem;
-            background: white;
-            border-radius: 12px;
+            background: rgba(255, 255, 255, 0.9);
+            border-radius: 20px;
             margin-bottom: 3rem;
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            box-shadow: 0 8px 24px rgba(139, 69, 19, 0.15);
+            border: 1px solid rgba(212, 184, 150, 0.3);
         }
 
         .hero h1 {
             font-size: 3rem;
-            color: #FF6B35;
+            color: #8B4513;
             margin-bottom: 1rem;
+            font-weight: 800;
         }
 
         .hero p {
@@ -93,18 +96,119 @@
 
         .cta-button {
             display: inline-block;
-            background: #FF6B35;
+            background: #8B4513;
             color: white;
             padding: 1rem 2rem;
-            border-radius: 8px;
+            border-radius: 12px;
             text-decoration: none;
             font-weight: bold;
-            transition: background 0.3s;
+            transition: all 0.3s;
             margin: 0.5rem;
+            box-shadow: 0 4px 12px rgba(139, 69, 19, 0.3);
         }
 
         .cta-button:hover {
-            background: #E55A24;
+            background: #6B3410;
+            transform: translateY(-2px);
+            box-shadow: 0 6px 16px rgba(139, 69, 19, 0.4);
+        }
+
+        .cta-button.secondary {
+            background: #D4B896;
+            color: #2C1810;
+        }
+
+        .cta-button.secondary:hover {
+            background: #C4A886;
+        }
+
+        .waitlist-section {
+            background: rgba(255, 255, 255, 0.9);
+            padding: 3rem 2rem;
+            border-radius: 20px;
+            margin: 3rem 0;
+            box-shadow: 0 8px 24px rgba(139, 69, 19, 0.15);
+            border: 1px solid rgba(212, 184, 150, 0.3);
+            text-align: center;
+        }
+
+        .waitlist-section h2 {
+            color: #8B4513;
+            margin-bottom: 1rem;
+            font-size: 2rem;
+        }
+
+        .waitlist-section p {
+            color: #6B5B4F;
+            margin-bottom: 2rem;
+            font-size: 1.1rem;
+        }
+
+        .waitlist-form {
+            max-width: 500px;
+            margin: 0 auto;
+        }
+
+        .waitlist-form input {
+            width: 100%;
+            padding: 1rem;
+            border: 2px solid #D4B896;
+            border-radius: 12px;
+            font-size: 1rem;
+            margin-bottom: 1rem;
+            background: #FEF9F0;
+            color: #2C1810;
+            transition: border-color 0.3s;
+        }
+
+        .waitlist-form input:focus {
+            outline: none;
+            border-color: #8B4513;
+        }
+
+        .waitlist-form button {
+            width: 100%;
+            padding: 1rem 2rem;
+            background: #8B4513;
+            color: white;
+            border: none;
+            border-radius: 12px;
+            font-size: 1.1rem;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s;
+            box-shadow: 0 4px 12px rgba(139, 69, 19, 0.3);
+        }
+
+        .waitlist-form button:hover {
+            background: #6B3410;
+            transform: translateY(-2px);
+            box-shadow: 0 6px 16px rgba(139, 69, 19, 0.4);
+        }
+
+        .waitlist-form button:disabled {
+            background: #D4B896;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .message {
+            margin-top: 1rem;
+            padding: 1rem;
+            border-radius: 8px;
+            font-weight: 500;
+        }
+
+        .message.success {
+            background: rgba(76, 175, 80, 0.1);
+            color: #2e7d32;
+            border: 1px solid rgba(76, 175, 80, 0.3);
+        }
+
+        .message.error {
+            background: rgba(244, 67, 54, 0.1);
+            color: #c62828;
+            border: 1px solid rgba(244, 67, 54, 0.3);
         }
 
         .features {
@@ -115,15 +219,22 @@
         }
 
         .feature-card {
-            background: white;
+            background: rgba(255, 255, 255, 0.9);
             padding: 2rem;
-            border-radius: 12px;
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            border-radius: 16px;
+            box-shadow: 0 4px 16px rgba(139, 69, 19, 0.1);
             text-align: center;
+            border: 1px solid rgba(212, 184, 150, 0.2);
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
+
+        .feature-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 8px 24px rgba(139, 69, 19, 0.2);
         }
 
         .feature-card h3 {
-            color: #FF6B35;
+            color: #8B4513;
             margin-bottom: 1rem;
             font-size: 1.5rem;
         }
@@ -141,30 +252,37 @@
         }
 
         footer a {
-            color: #FFD700;
+            color: #D4B896;
             text-decoration: none;
         }
 
         footer a:hover {
             text-decoration: underline;
+            color: #F5E6D3;
         }
 
         .contact-info {
-            background: white;
+            background: rgba(255, 255, 255, 0.9);
             padding: 2rem;
-            border-radius: 12px;
+            border-radius: 16px;
             margin: 2rem 0;
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            box-shadow: 0 4px 16px rgba(139, 69, 19, 0.1);
+            border: 1px solid rgba(212, 184, 150, 0.2);
         }
 
         .contact-info h2 {
-            color: #FF6B35;
+            color: #8B4513;
             margin-bottom: 1rem;
         }
 
         .contact-info p {
             color: #6B5B4F;
             margin: 0.5rem 0;
+        }
+
+        .contact-info a {
+            color: #8B4513;
+            font-weight: 600;
         }
 
         @media (max-width: 768px) {
@@ -180,8 +298,68 @@
             .container {
                 padding: 1rem;
             }
+
+            .waitlist-section {
+                padding: 2rem 1rem;
+            }
+
+            .waitlist-section h2 {
+                font-size: 1.5rem;
+            }
         }
     </style>
+    <script>
+        async function joinWaitlist(event) {
+            event.preventDefault();
+            
+            const form = event.target;
+            const email = form.email.value.trim();
+            const button = form.querySelector('button');
+            const messageDiv = document.getElementById('waitlist-message');
+            
+            // Basic email validation
+            const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+            if (!emailRegex.test(email)) {
+                messageDiv.textContent = 'Please enter a valid email address.';
+                messageDiv.className = 'message error';
+                return;
+            }
+            
+            // Disable button and show loading
+            button.disabled = true;
+            button.textContent = 'Joining...';
+            messageDiv.textContent = '';
+            messageDiv.className = '';
+            
+            try {
+                // Google Apps Script Web App URL
+                const scriptURL = 'https://script.google.com/macros/s/AKfycby6Xyb6ALZ1YLDmCAtdgW30DT9Gc3gcXxosqB5KU8NRB41q6gpe6kqhmhuK8SMIw2Zi/exec';
+                
+                const formData = new FormData();
+                formData.append('email', email);
+                formData.append('timestamp', new Date().toISOString());
+                
+                const response = await fetch(scriptURL, {
+                    method: 'POST',
+                    body: formData
+                });
+                
+                if (response.ok) {
+                    messageDiv.textContent = '🎉 Success! You\'re on the waitlist. We\'ll notify you when the app launches!';
+                    messageDiv.className = 'message success';
+                    form.reset();
+                } else {
+                    throw new Error('Failed to submit');
+                }
+            } catch (error) {
+                messageDiv.textContent = '❌ Something went wrong. Please try again or email us directly.';
+                messageDiv.className = 'message error';
+            } finally {
+                button.disabled = false;
+                button.textContent = 'Join Waitlist';
+            }
+        }
+    </script>
 </head>
 <body>
     <header>
@@ -201,10 +379,22 @@
             <h1>🌸 Mantra Mala Jaap</h1>
             <p>Your Digital Spiritual Companion</p>
             <p>Track your mantra practice with an interactive 108-bead mala, 18+ mantras, and beautiful statistics.</p>
-            <div>
-                <a href="https://play.google.com/store/apps/details?id=com.bytecode.digitalcounter" class="cta-button">Download on Google Play</a>
-                <a href="https://apps.apple.com/app/mala-jaal" class="cta-button">Download on App Store</a>
-            </div>
+        </div>
+
+        <div class="waitlist-section">
+            <h2>🚀 Coming Soon to App Stores!</h2>
+            <p>Be the first to know when Mantra Mala Jaap launches. Join our waitlist and get notified!</p>
+            <form class="waitlist-form" onsubmit="joinWaitlist(event)">
+                <input 
+                    type="email" 
+                    name="email" 
+                    placeholder="Enter your email address" 
+                    required
+                    autocomplete="email"
+                />
+                <button type="submit">Join Waitlist</button>
+                <div id="waitlist-message"></div>
+            </form>
         </div>
 
         <h2 style="text-align: center; color: #FF6B35; margin: 3rem 0 2rem;">✨ Features</h2>
@@ -243,7 +433,7 @@
         </div>
 
         <div style="text-align: center; margin: 2rem 0;">
-            <a href="privacy.html" style="color: #FF6B35; text-decoration: none; font-weight: bold;">📄 Read Our Privacy Policy</a>
+            <a href="privacy.html" style="color: #8B4513; text-decoration: none; font-weight: bold;">📄 Read Our Privacy Policy</a>
         </div>
     </div>
 

@@ -1,0 +1,122 @@
+GOOGLE SHEETS WAITLIST SETUP GUIDE
+===================================
+
+Follow these steps to set up the waitlist email collection with Google Sheets:
+
+STEP 1: CREATE A GOOGLE SHEET
+------------------------------
+1. Go to https://sheets.google.com
+2. Create a new spreadsheet
+3. Name it "Mantra Mala Jaap Waitlist"
+4. In the first row, add these headers:
+   - Column A: Email
+   - Column B: Timestamp
+   - Column C: Source
+
+STEP 2: CREATE GOOGLE APPS SCRIPT
+----------------------------------
+1. In your Google Sheet, click "Extensions" → "Apps Script"
+2. Delete any existing code
+3. Paste the following code:
+
+```javascript
+function doPost(e) {
+  try {
+    const sheet = SpreadsheetApp.getActiveSpreadsheet().getActiveSheet();
+    const email = e.parameter.email;
+    const timestamp = e.parameter.timestamp || new Date().toISOString();
+    
+    // Add the data to the sheet
+    sheet.appendRow([email, timestamp, 'Website']);
+    
+    return ContentService
+      .createTextOutput(JSON.stringify({ success: true }))
+      .setMimeType(ContentService.MimeType.JSON);
+  } catch (error) {
+    return ContentService
+      .createTextOutput(JSON.stringify({ success: false, error: error.toString() }))
+      .setMimeType(ContentService.MimeType.JSON);
+  }
+}
+```
+
+4. Click "Save" (disk icon)
+5. Name your project "Waitlist Handler"
+
+STEP 3: DEPLOY AS WEB APP
+--------------------------
+1. Click "Deploy" → "New deployment"
+2. Click the gear icon next to "Select type"
+3. Choose "Web app"
+4. Configure:
+   - Description: "Waitlist Form Handler"
+   - Execute as: "Me"
+   - Who has access: "Anyone"
+5. Click "Deploy"
+6. Review permissions and click "Authorize access"
+7. Choose your Google account
+8. Click "Advanced" → "Go to Waitlist Handler (unsafe)"
+9. Click "Allow"
+10. Copy the "Web app URL" - it should look like:
+    https://script.google.com/macros/s/XXXXX/exec
+
+STEP 4: UPDATE WEBSITE
+----------------------
+1. Open website/index.html
+2. Find this line (around line 280):
+   const scriptURL = 'YOUR_GOOGLE_APPS_SCRIPT_URL_HERE';
+3. Replace 'YOUR_GOOGLE_APPS_SCRIPT_URL_HERE' with your Web app URL
+4. Save the file
+
+STEP 5: TEST THE FORM
+----------------------
+1. Open your website in a browser
+2. Enter a test email in the waitlist form
+3. Click "Join Waitlist"
+4. Check your Google Sheet - you should see the email appear!
+
+TROUBLESHOOTING
+---------------
+- If you get a CORS error: Make sure "Who has access" is set to "Anyone"
+- If emails don't appear: Check the Apps Script execution logs (View → Executions)
+- If you get permission errors: Re-authorize the script in Step 3
+
+OPTIONAL: EMAIL NOTIFICATIONS
+------------------------------
+To get notified when someone joins the waitlist, add this to your Apps Script:
+
+```javascript
+function doPost(e) {
+  try {
+    const sheet = SpreadsheetApp.getActiveSpreadsheet().getActiveSheet();
+    const email = e.parameter.email;
+    const timestamp = e.parameter.timestamp || new Date().toISOString();
+    
+    sheet.appendRow([email, timestamp, 'Website']);
+    
+    // Send email notification
+    MailApp.sendEmail({
+      to: 'bytecode.creation@gmail.com',
+      subject: 'New Waitlist Signup - Mantra Mala Jaap',
+      body: `New signup!\n\nEmail: ${email}\nTime: ${timestamp}`
+    });
+    
+    return ContentService
+      .createTextOutput(JSON.stringify({ success: true }))
+      .setMimeType(ContentService.MimeType.JSON);
+  } catch (error) {
+    return ContentService
+      .createTextOutput(JSON.stringify({ success: false, error: error.toString() }))
+      .setMimeType(ContentService.MimeType.JSON);
+  }
+}
+```
+
+EXPORTING EMAILS
+----------------
+When you're ready to contact your waitlist:
+1. Open your Google Sheet
+2. Click "File" → "Download" → "Comma Separated Values (.csv)"
+3. Import into your email marketing tool
+
+That's it! Your waitlist is now live and collecting emails.

@@ -16,14 +16,15 @@
             font-family: 'Roboto', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
             line-height: 1.8;
             color: #2C1810;
-            background: linear-gradient(135deg, #F5E6D3 0%, #FEF9F0 100%);
+            background: linear-gradient(135deg, #F5E6D3 0%, #FEF9F0 50%, #F5E6D3 100%);
+            min-height: 100vh;
         }
 
         header {
-            background: linear-gradient(135deg, #FF6B35 0%, #FFD700 100%);
+            background: linear-gradient(135deg, #8B4513 0%, #D4B896 100%);
             color: white;
             padding: 2rem 0;
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            box-shadow: 0 4px 6px rgba(139, 69, 19, 0.2);
             position: sticky;
             top: 0;
             z-index: 100;
@@ -60,25 +61,26 @@
             max-width: 900px;
             margin: 0 auto;
             padding: 2rem;
-            background: white;
-            border-radius: 12px;
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 20px;
             margin-top: 2rem;
             margin-bottom: 2rem;
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            box-shadow: 0 8px 24px rgba(139, 69, 19, 0.15);
+            border: 1px solid rgba(212, 184, 150, 0.3);
         }
 
         h1 {
-            color: #FF6B35;
+            color: #8B4513;
             margin-bottom: 1rem;
             font-size: 2.5rem;
         }
 
         h2 {
-            color: #FF6B35;
+            color: #8B4513;
             margin-top: 2rem;
             margin-bottom: 1rem;
             font-size: 1.5rem;
-            border-bottom: 2px solid #FFD700;
+            border-bottom: 2px solid #D4B896;
             padding-bottom: 0.5rem;
         }
 
@@ -107,13 +109,13 @@
         .highlight {
             background: #FFF9E6;
             padding: 1.5rem;
-            border-left: 4px solid #FFD700;
+            border-left: 4px solid #D4B896;
             margin: 1.5rem 0;
             border-radius: 4px;
         }
 
         .highlight strong {
-            color: #FF6B35;
+            color: #8B4513;
         }
 
         .last-updated {
@@ -133,12 +135,13 @@
         }
 
         footer a {
-            color: #FFD700;
+            color: #D4B896;
             text-decoration: none;
         }
 
         footer a:hover {
             text-decoration: underline;
+            color: #F5E6D3;
         }
 
         .contact-section {
@@ -149,7 +152,7 @@
         }
 
         .contact-section a {
-            color: #FF6B35;
+            color: #8B4513;
             text-decoration: none;
             font-weight: bold;
         }

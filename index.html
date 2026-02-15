@@ -1,0 +1,261 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Mantra Mala Jaap - Digital Mantra Counter App. Track your spiritual practice with interactive 108-bead mala, 18+ mantras, and beautiful statistics.">
+    <meta name="keywords" content="mala, mantra, meditation, spirituality, counter, jaap, hindu, prayer, affirmation">
+    <meta name="author" content="Bytecode Creation">
+    <title>Mantra Mala Jaap - Digital Mantra Counter</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Roboto', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            line-height: 1.6;
+            color: #2C1810;
+            background: linear-gradient(135deg, #F5E6D3 0%, #FEF9F0 100%);
+        }
+
+        header {
+            background: linear-gradient(135deg, #FF6B35 0%, #FFD700 100%);
+            color: white;
+            padding: 2rem 0;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        nav {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0 2rem;
+        }
+
+        .logo {
+            font-size: 1.8rem;
+            font-weight: bold;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        nav ul {
+            list-style: none;
+            display: flex;
+            gap: 2rem;
+        }
+
+        nav a {
+            color: white;
+            text-decoration: none;
+            transition: opacity 0.3s;
+        }
+
+        nav a:hover {
+            opacity: 0.8;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+
+        .hero {
+            text-align: center;
+            padding: 4rem 2rem;
+            background: white;
+            border-radius: 12px;
+            margin-bottom: 3rem;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        }
+
+        .hero h1 {
+            font-size: 3rem;
+            color: #FF6B35;
+            margin-bottom: 1rem;
+        }
+
+        .hero p {
+            font-size: 1.2rem;
+            color: #6B5B4F;
+            margin-bottom: 2rem;
+        }
+
+        .cta-button {
+            display: inline-block;
+            background: #FF6B35;
+            color: white;
+            padding: 1rem 2rem;
+            border-radius: 8px;
+            text-decoration: none;
+            font-weight: bold;
+            transition: background 0.3s;
+            margin: 0.5rem;
+        }
+
+        .cta-button:hover {
+            background: #E55A24;
+        }
+
+        .features {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 2rem;
+            margin: 3rem 0;
+        }
+
+        .feature-card {
+            background: white;
+            padding: 2rem;
+            border-radius: 12px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            text-align: center;
+        }
+
+        .feature-card h3 {
+            color: #FF6B35;
+            margin-bottom: 1rem;
+            font-size: 1.5rem;
+        }
+
+        .feature-card p {
+            color: #6B5B4F;
+        }
+
+        footer {
+            background: #2C1810;
+            color: white;
+            text-align: center;
+            padding: 2rem;
+            margin-top: 4rem;
+        }
+
+        footer a {
+            color: #FFD700;
+            text-decoration: none;
+        }
+
+        footer a:hover {
+            text-decoration: underline;
+        }
+
+        .contact-info {
+            background: white;
+            padding: 2rem;
+            border-radius: 12px;
+            margin: 2rem 0;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        }
+
+        .contact-info h2 {
+            color: #FF6B35;
+            margin-bottom: 1rem;
+        }
+
+        .contact-info p {
+            color: #6B5B4F;
+            margin: 0.5rem 0;
+        }
+
+        @media (max-width: 768px) {
+            nav ul {
+                gap: 1rem;
+                font-size: 0.9rem;
+            }
+
+            .hero h1 {
+                font-size: 2rem;
+            }
+
+            .container {
+                padding: 1rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <nav>
+            <div class="logo">🌸 Mantra Mala Jaap</div>
+            <ul>
+                <li><a href="#features">Features</a></li>
+                <li><a href="#download">Download</a></li>
+                <li><a href="privacy.html">Privacy Policy</a></li>
+                <li><a href="#contact">Contact</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <div class="container">
+        <div class="hero">
+            <h1>🌸 Mantra Mala Jaap</h1>
+            <p>Your Digital Spiritual Companion</p>
+            <p>Track your mantra practice with an interactive 108-bead mala, 18+ mantras, and beautiful statistics.</p>
+            <div>
+                <a href="https://play.google.com/store/apps/details?id=com.bytecode.digitalcounter" class="cta-button">Download on Google Play</a>
+                <a href="https://apps.apple.com/app/mala-jaal" class="cta-button">Download on App Store</a>
+            </div>
+        </div>
+
+        <h2 style="text-align: center; color: #FF6B35; margin: 3rem 0 2rem;">✨ Features</h2>
+        <div class="features" id="features">
+            <div class="feature-card">
+                <h3>🔮 108 Interactive Beads</h3>
+                <p>Drag beads to count your mantras with smooth, realistic animations and haptic feedback.</p>
+            </div>
+            <div class="feature-card">
+                <h3>🕉️ 18+ Mantras</h3>
+                <p>Choose from mantras dedicated to Lord Shiva, Vishnu, Ganesha, Goddess, and more. Bilingual support (Hindi & English).</p>
+            </div>
+            <div class="feature-card">
+                <h3>📊 Beautiful Statistics</h3>
+                <p>Track lifetime counts, daily streaks, best day records, and view 30-day progress charts.</p>
+            </div>
+            <div class="feature-card">
+                <h3>🎨 7 Mala Types</h3>
+                <p>Choose from Rudraksha, Tulsi, Crystal, Sandalwood, Gold, Emoji, and Neon malas.</p>
+            </div>
+            <div class="feature-card">
+                <h3>📱 Offline-First</h3>
+                <p>All data stored locally on your device. No internet required. Your privacy is protected.</p>
+            </div>
+            <div class="feature-card">
+                <h3>⚙️ Customizable</h3>
+                <p>Adjust vibration intensity, enable/disable sound, set lifetime targets, and more.</p>
+            </div>
+        </div>
+
+        <div class="contact-info" id="contact">
+            <h2>📞 Contact Us</h2>
+            <p><strong>Email:</strong> <a href="mailto:bytecode.creation@gmail.com">bytecode.creation@gmail.com</a></p>
+            <p><strong>Company:</strong> Bytecode Creation</p>
+            <p><strong>Support:</strong> For any questions or issues, please email us.</p>
+        </div>
+
+        <div style="text-align: center; margin: 2rem 0;">
+            <a href="privacy.html" style="color: #FF6B35; text-decoration: none; font-weight: bold;">📄 Read Our Privacy Policy</a>
+        </div>
+    </div>
+
+    <footer>
+        <p>&copy; 2026 Bytecode Creation. All rights reserved.</p>
+        <p>
+            <a href="privacy.html">Privacy Policy</a> | 
+            <a href="mailto:bytecode.creation@gmail.com">Contact</a>
+        </p>
+        <p style="margin-top: 1rem; font-size: 0.9rem;">
+            Mantra Mala Jaap is a spiritual counting app designed to help you track your mantra practice.
+        </p>
+    </footer>
+</body>
+</html>

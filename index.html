@@ -7,6 +7,8 @@
     <meta name="keywords" content="mala, mantra, meditation, spirituality, counter, jaap, hindu, prayer, affirmation">
     <meta name="author" content="Bytecode Creation">
     <title>Mantra Mala Jaap - Digital Mantra Counter</title>
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
     <style>
         * {
             margin: 0;
@@ -47,6 +49,11 @@
             display: flex;
             align-items: center;
             gap: 0.5rem;
+        }
+
+        .logo svg {
+            width: 28px;
+            height: 28px;
         }
 
         nav ul {
@@ -237,6 +244,16 @@
             color: #8B4513;
             margin-bottom: 1rem;
             font-size: 1.5rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+        }
+
+        .feature-card h3 svg {
+            width: 28px;
+            height: 28px;
+            flex-shrink: 0;
         }
 
         .feature-card p {
@@ -273,6 +290,14 @@
         .contact-info h2 {
             color: #8B4513;
             margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .contact-info h2 svg {
+            width: 24px;
+            height: 24px;
         }
 
         .contact-info p {
@@ -283,6 +308,58 @@
         .contact-info a {
             color: #8B4513;
             font-weight: 600;
+        }
+
+        .screenshots-section {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 2rem;
+            margin: 2rem 0 3rem;
+            max-width: 1000px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .screenshot-card {
+            background: rgba(255, 255, 255, 0.9);
+            padding: 1.5rem;
+            border-radius: 20px;
+            box-shadow: 0 8px 24px rgba(139, 69, 19, 0.15);
+            border: 1px solid rgba(212, 184, 150, 0.3);
+            text-align: center;
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
+
+        .screenshot-card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 12px 32px rgba(139, 69, 19, 0.25);
+        }
+
+        .screenshot-card img {
+            width: 100%;
+            max-width: 300px;
+            height: auto;
+            border-radius: 16px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            margin-bottom: 1rem;
+        }
+
+        .screenshot-card p {
+            color: #6B5B4F;
+            font-size: 0.95rem;
+            margin: 0;
+        }
+
+        .section-title {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+        }
+
+        .section-title svg {
+            width: 32px;
+            height: 32px;
         }
 
         @media (max-width: 768px) {
@@ -313,15 +390,25 @@
             event.preventDefault();
             
             const form = event.target;
-            const email = form.email.value.trim();
+            const emailInput = form.email;
+            const email = emailInput.value.trim();
             const button = form.querySelector('button');
             const messageDiv = document.getElementById('waitlist-message');
             
-            // Basic email validation
-            const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-            if (!emailRegex.test(email)) {
-                messageDiv.textContent = 'Please enter a valid email address.';
-                messageDiv.className = 'message error';
+            // SECURITY: Enhanced email validation
+            if (!isValidEmail(email)) {
+                showMessage('Please enter a valid email address.', 'error');
+                return;
+            }
+            
+            // SECURITY: Check email length
+            if (email.length > 254) {
+                showMessage('Email address is too long.', 'error');
+                return;
+            }
+            
+            // SECURITY: Prevent multiple rapid submissions
+            if (button.disabled) {
                 return;
             }
             
@@ -332,39 +419,98 @@
             messageDiv.className = '';
             
             try {
-                // Google Apps Script Web App URL
-                const scriptURL = 'https://script.google.com/macros/s/AKfycby6Xyb6ALZ1YLDmCAtdgW30DT9Gc3gcXxosqB5KU8NRB41q6gpe6kqhmhuK8SMIw2Zi/exec';
+                // Google Apps Script Web App URL (Secure Version 2)
+                const scriptURL = 'https://script.google.com/macros/s/AKfycbzLLdQHiCWp4HN5dowAMOenzBX9laXlAkH1oDnW9HSV-EDCQPfjkFGBWoyCDlqPKYdj/exec';
                 
                 const formData = new FormData();
-                formData.append('email', email);
+                formData.append('email', email.toLowerCase()); // Normalize to lowercase
                 formData.append('timestamp', new Date().toISOString());
+                formData.append('source', 'Website');
+                
+                // SECURITY: Set timeout for request (10 seconds)
+                const controller = new AbortController();
+                const timeoutId = setTimeout(() => controller.abort(), 10000);
                 
                 const response = await fetch(scriptURL, {
                     method: 'POST',
-                    body: formData
+                    body: formData,
+                    signal: controller.signal
                 });
                 
+                clearTimeout(timeoutId);
+                
                 if (response.ok) {
-                    messageDiv.textContent = '🎉 Success! You\'re on the waitlist. We\'ll notify you when the app launches!';
-                    messageDiv.className = 'message success';
-                    form.reset();
+                    const result = await response.json();
+                    
+                    if (result.success) {
+                        showMessage('🎉 Success! You\'re on the waitlist. We\'ll notify you when the app launches!', 'success');
+                        form.reset();
+                        
+                        // SECURITY: Prevent resubmission for 60 seconds
+                        setTimeout(() => {
+                            button.disabled = false;
+                            button.textContent = 'Join Waitlist';
+                        }, 60000);
+                    } else {
+                        showMessage(result.message || 'Unable to join waitlist. Please try again.', 'error');
+                        button.disabled = false;
+                        button.textContent = 'Join Waitlist';
+                    }
                 } else {
-                    throw new Error('Failed to submit');
+                    throw new Error('Server error');
                 }
             } catch (error) {
-                messageDiv.textContent = '❌ Something went wrong. Please try again or email us directly.';
-                messageDiv.className = 'message error';
-            } finally {
+                if (error.name === 'AbortError') {
+                    showMessage('Request timeout. Please check your connection and try again.', 'error');
+                } else {
+                    showMessage('Something went wrong. Please try again or email us directly at bytecode.creation@gmail.com', 'error');
+                }
                 button.disabled = false;
                 button.textContent = 'Join Waitlist';
             }
         }
+        
+        // Enhanced email validation function
+        function isValidEmail(email) {
+            if (!email || typeof email !== 'string') return false;
+            
+            // Comprehensive email regex
+            const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+            
+            // Additional security checks
+            if (email.includes('..')) return false; // No consecutive dots
+            if (email.startsWith('.') || email.endsWith('.')) return false;
+            if (email.includes('<') || email.includes('>')) return false; // No angle brackets
+            if (email.includes('"') || email.includes("'")) return false; // No quotes
+            
+            const parts = email.split('@');
+            if (parts.length !== 2) return false;
+            if (parts[0].length === 0 || parts[1].length === 0) return false;
+            if (!parts[1].includes('.')) return false;
+            
+            return emailRegex.test(email);
+        }
+        
+        // Helper function to show messages
+        function showMessage(text, type) {
+            const messageDiv = document.getElementById('waitlist-message');
+            messageDiv.textContent = text;
+            messageDiv.className = `message ${type}`;
+        }
+
+        // Initialize Lucide icons after page load
+        document.addEventListener('DOMContentLoaded', function() {
+            lucide.createIcons();
+        });
     </script>
 </head>
 <body>
     <header>
         <nav>
-            <div class="logo">🌸 Mantra Mala Jaap</div>
+            <div class="logo">
+                <i data-lucide="flower-2"></i>
+                Mantra Mala Jaap
+            </div>
             <ul>
                 <li><a href="#features">Features</a></li>
                 <li><a href="#download">Download</a></li>
@@ -376,13 +522,13 @@
 
     <div class="container">
         <div class="hero">
-            <h1>🌸 Mantra Mala Jaap</h1>
+            <h1><i data-lucide="flower-2" style="display: inline-block; width: 48px; height: 48px; vertical-align: middle;"></i> Mantra Mala Jaap</h1>
             <p>Your Digital Spiritual Companion</p>
             <p>Track your mantra practice with an interactive 108-bead mala, 18+ mantras, and beautiful statistics.</p>
         </div>
 
         <div class="waitlist-section">
-            <h2>🚀 Coming Soon to App Stores!</h2>
+            <h2><i data-lucide="rocket" style="display: inline-block; width: 32px; height: 32px; vertical-align: middle;"></i> Coming Soon to App Stores!</h2>
             <p>Be the first to know when Mantra Mala Jaap launches. Join our waitlist and get notified!</p>
             <form class="waitlist-form" onsubmit="joinWaitlist(event)">
                 <input 
@@ -391,49 +537,83 @@
                     placeholder="Enter your email address" 
                     required
                     autocomplete="email"
+                    maxlength="254"
+                    pattern="[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}"
+                    title="Please enter a valid email address"
                 />
                 <button type="submit">Join Waitlist</button>
                 <div id="waitlist-message"></div>
+                <p style="font-size: 0.85rem; color: #6B5B4F; margin-top: 1rem; line-height: 1.4;">
+                    <i data-lucide="shield-check" style="display: inline-block; width: 14px; height: 14px; vertical-align: middle;"></i>
+                    By submitting your email, you consent to receive updates about Mantra Mala Jaap. 
+                    We respect your privacy and will never share your email with third parties. 
+                    <a href="privacy.html" style="color: #8B4513; text-decoration: underline;">Privacy Policy</a>
+                </p>
             </form>
         </div>
 
-        <h2 style="text-align: center; color: #FF6B35; margin: 3rem 0 2rem;">✨ Features</h2>
+        <h2 style="text-align: center; color: #8B4513; margin: 3rem 0 2rem;" class="section-title">
+            <i data-lucide="sparkles"></i>
+            Features
+        </h2>
         <div class="features" id="features">
             <div class="feature-card">
-                <h3>🔮 108 Interactive Beads</h3>
+                <h3><i data-lucide="circle-dot"></i> 108 Interactive Beads</h3>
                 <p>Drag beads to count your mantras with smooth, realistic animations and haptic feedback.</p>
             </div>
             <div class="feature-card">
-                <h3>🕉️ 18+ Mantras</h3>
+                <h3><i data-lucide="book-open"></i> 18+ Mantras</h3>
                 <p>Choose from mantras dedicated to Lord Shiva, Vishnu, Ganesha, Goddess, and more. Bilingual support (Hindi & English).</p>
             </div>
             <div class="feature-card">
-                <h3>📊 Beautiful Statistics</h3>
+                <h3><i data-lucide="bar-chart-3"></i> Beautiful Statistics</h3>
                 <p>Track lifetime counts, daily streaks, best day records, and view 30-day progress charts.</p>
             </div>
             <div class="feature-card">
-                <h3>🎨 7 Mala Types</h3>
+                <h3><i data-lucide="palette"></i> 7 Mala Types</h3>
                 <p>Choose from Rudraksha, Tulsi, Crystal, Sandalwood, Gold, Emoji, and Neon malas.</p>
             </div>
             <div class="feature-card">
-                <h3>📱 Offline-First</h3>
+                <h3><i data-lucide="wifi-off"></i> Offline-First</h3>
                 <p>All data stored locally on your device. No internet required. Your privacy is protected.</p>
             </div>
             <div class="feature-card">
-                <h3>⚙️ Customizable</h3>
+                <h3><i data-lucide="settings"></i> Customizable</h3>
                 <p>Adjust vibration intensity, enable/disable sound, set lifetime targets, and more.</p>
             </div>
         </div>
 
+        <h2 style="text-align: center; color: #8B4513; margin: 3rem 0 2rem;" class="section-title">
+            <i data-lucide="smartphone"></i>
+            App Preview
+        </h2>
+        <div class="screenshots-section">
+            <div class="screenshot-card">
+                <img src="images/screenshot1.png" alt="Mantra Mala Jaap - Main Counter Screen" loading="lazy">
+                <p>Interactive 108-bead mala with real-time counter</p>
+            </div>
+            <div class="screenshot-card">
+                <img src="images/screenshot2.png" alt="Mantra Mala Jaap - Mantra Selection" loading="lazy">
+                <p>Choose from 18+ mantras in Hindi & English</p>
+            </div>
+            <div class="screenshot-card">
+                <img src="images/screenshot3.png" alt="Mantra Mala Jaap - Settings Screen" loading="lazy">
+                <p>Customize your experience with flexible settings</p>
+            </div>
+        </div>
+
         <div class="contact-info" id="contact">
-            <h2>📞 Contact Us</h2>
+            <h2><i data-lucide="phone"></i> Contact Us</h2>
             <p><strong>Email:</strong> <a href="mailto:bytecode.creation@gmail.com">bytecode.creation@gmail.com</a></p>
             <p><strong>Company:</strong> Bytecode Creation</p>
             <p><strong>Support:</strong> For any questions or issues, please email us.</p>
         </div>
 
         <div style="text-align: center; margin: 2rem 0;">
-            <a href="privacy.html" style="color: #8B4513; text-decoration: none; font-weight: bold;">📄 Read Our Privacy Policy</a>
+            <a href="privacy.html" style="color: #8B4513; text-decoration: none; font-weight: bold; display: inline-flex; align-items: center; gap: 0.5rem;">
+                <i data-lucide="file-text" style="width: 20px; height: 20px;"></i>
+                Read Our Privacy Policy
+            </a>
         </div>
     </div>
 

@@ -1,0 +1,56 @@
+HOW TO ADD APP SCREENSHOTS TO WEBSITE
+======================================
+
+The website is now configured to display your app screenshots. Follow these steps:
+
+STEP 1: SAVE THE SCREENSHOTS
+-----------------------------
+1. Save the first screenshot (showing counter "4" with beads) as:
+   website/images/screenshot1.png
+
+2. Save the second screenshot (showing "Choose Mantra" modal) as:
+   website/images/screenshot2.png
+
+3. Save the third screenshot (showing "Settings" screen) as:
+   website/images/screenshot3.png
+
+STEP 2: UPLOAD TO YOUR WEB SERVER
+----------------------------------
+When you deploy your website, make sure to upload the images folder:
+- website/images/screenshot1.png
+- website/images/screenshot2.png
+- website/images/screenshot3.png
+
+STEP 3: VERIFY
+--------------
+After uploading, visit your website and you should see:
+- A new "App Preview" section below the Features
+- Three screenshots displayed in a responsive grid
+- 3 columns on desktop, stacks vertically on mobile
+- Hover effects on the screenshot cards
+- Clean open-source Lucide icons (no emojis)
+
+OPTIONAL: ADD MORE SCREENSHOTS
+-------------------------------
+To add more screenshots, simply:
+1. Add more images to website/images/
+2. Add more screenshot-card divs in index.html following this pattern:
+
+<div class="screenshot-card">
+    <img src="images/screenshot3.png" alt="Description" loading="lazy">
+    <p>Caption text here</p>
+</div>
+
+The grid will automatically adjust to fit the new screenshots!
+
+CURRENT SETUP
+-------------
+✅ CSS styles added for screenshot section
+✅ Responsive 3-column grid layout (stacks on mobile)
+✅ Hover animations
+✅ Lazy loading for performance
+✅ Proper alt text for accessibility
+✅ Open-source Lucide icons throughout the site (no emojis)
+✅ All three pages updated (index, privacy, support)
+
+Just add the image files and you're done!

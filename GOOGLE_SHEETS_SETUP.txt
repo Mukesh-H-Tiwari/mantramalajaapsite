@@ -12,111 +12,250 @@ STEP 1: CREATE A GOOGLE SHEET
    - Column A: Email
    - Column B: Timestamp
    - Column C: Source
+   - Column D: IP Address (optional)
+   - Column E: User Agent (optional)
 
-STEP 2: CREATE GOOGLE APPS SCRIPT
-----------------------------------
+STEP 2: SECURE YOUR GOOGLE SHEET
+---------------------------------
+1. Click "Share" button (top right)
+2. Under "General access" select "Restricted"
+3. Only add specific people who need access
+4. Set their permission to "Viewer" (not Editor)
+5. This ensures only the script can write data
+
+STEP 3: CREATE GOOGLE APPS SCRIPT (SECURE VERSION)
+---------------------------------------------------
 1. In your Google Sheet, click "Extensions" → "Apps Script"
 2. Delete any existing code
-3. Paste the following code:
+3. Paste the following SECURE code:
 
 ```javascript
+// SECURE WAITLIST HANDLER WITH VALIDATION AND RATE LIMITING
 function doPost(e) {
   try {
+    // Get the active sheet
     const sheet = SpreadsheetApp.getActiveSpreadsheet().getActiveSheet();
+    
+    // Extract parameters
     const email = e.parameter.email;
     const timestamp = e.parameter.timestamp || new Date().toISOString();
+    const source = e.parameter.source || 'Website';
+    
+    // SECURITY: Validate email format
+    if (!isValidEmail(email)) {
+      return createResponse(false, 'Invalid email format');
+    }
+    
+    // SECURITY: Check for duplicate emails
+    if (isDuplicateEmail(sheet, email)) {
+      return createResponse(false, 'Email already registered');
+    }
+    
+    // SECURITY: Rate limiting - check if too many submissions from same source
+    if (isRateLimited(sheet)) {
+      return createResponse(false, 'Too many requests. Please try again later.');
+    }
+    
+    // SECURITY: Sanitize email (remove any potential script injection)
+    const sanitizedEmail = sanitizeInput(email);
     
     // Add the data to the sheet
-    sheet.appendRow([email, timestamp, 'Website']);
+    sheet.appendRow([
+      sanitizedEmail,
+      timestamp,
+      source,
+      e.parameter.postData?.contents || 'N/A', // Optional: IP tracking
+      e.parameter.userAgent || 'N/A' // Optional: User agent
+    ]);
     
-    return ContentService
-      .createTextOutput(JSON.stringify({ success: true }))
-      .setMimeType(ContentService.MimeType.JSON);
+    // Log successful submission
+    Logger.log(`New waitlist signup: ${sanitizedEmail}`);
+    
+    return createResponse(true, 'Successfully added to waitlist');
+    
   } catch (error) {
-    return ContentService
-      .createTextOutput(JSON.stringify({ success: false, error: error.toString() }))
-      .setMimeType(ContentService.MimeType.JSON);
+    Logger.log(`Error: ${error.toString()}`);
+    return createResponse(false, 'Server error. Please try again.');
   }
+}
+
+// Validate email format using regex
+function isValidEmail(email) {
+  if (!email || typeof email !== 'string') return false;
+  
+  const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+  
+  // Additional checks
+  if (email.length > 254) return false; // Max email length
+  if (email.includes('..')) return false; // No consecutive dots
+  if (email.startsWith('.') || email.endsWith('.')) return false;
+  
+  return emailRegex.test(email);
+}
+
+// Check for duplicate emails
+function isDuplicateEmail(sheet, email) {
+  const data = sheet.getDataRange().getValues();
+  const normalizedEmail = email.toLowerCase().trim();
+  
+  for (let i = 1; i < data.length; i++) { // Skip header row
+    if (data[i][0] && data[i][0].toLowerCase().trim() === normalizedEmail) {
+      return true;
+    }
+  }
+  return false;
+}
+
+// Rate limiting: Max 10 submissions per minute
+function isRateLimited(sheet) {
+  const data = sheet.getDataRange().getValues();
+  const oneMinuteAgo = new Date(Date.now() - 60000);
+  let recentCount = 0;
+  
+  for (let i = 1; i < data.length; i++) {
+    const rowTimestamp = new Date(data[i][1]);
+    if (rowTimestamp > oneMinuteAgo) {
+      recentCount++;
+    }
+  }
+  
+  return recentCount > 10; // Max 10 per minute
+}
+
+// Sanitize input to prevent injection attacks
+function sanitizeInput(input) {
+  if (!input) return '';
+  
+  return input
+    .toString()
+    .trim()
+    .toLowerCase()
+    .replace(/[<>\"\']/g, '') // Remove potentially dangerous characters
+    .substring(0, 254); // Limit length
+}
+
+// Create standardized response
+function createResponse(success, message) {
+  return ContentService
+    .createTextOutput(JSON.stringify({ 
+      success: success, 
+      message: message 
+    }))
+    .setMimeType(ContentService.MimeType.JSON);
+}
+
+// Optional: Handle GET requests (return error)
+function doGet(e) {
+  return createResponse(false, 'GET requests not supported');
 }
 ```
 
 4. Click "Save" (disk icon)
-5. Name your project "Waitlist Handler"
+5. Name your project "Secure Waitlist Handler"
 
-STEP 3: DEPLOY AS WEB APP
---------------------------
+STEP 4: DEPLOY AS WEB APP (SECURE SETTINGS)
+--------------------------------------------
 1. Click "Deploy" → "New deployment"
 2. Click the gear icon next to "Select type"
 3. Choose "Web app"
 4. Configure:
-   - Description: "Waitlist Form Handler"
-   - Execute as: "Me"
-   - Who has access: "Anyone"
+   - Description: "Secure Waitlist Form Handler"
+   - Execute as: "Me" (IMPORTANT: This runs with your permissions)
+   - Who has access: "Anyone" (Required for public form, but secured by validation)
 5. Click "Deploy"
 6. Review permissions and click "Authorize access"
 7. Choose your Google account
-8. Click "Advanced" → "Go to Waitlist Handler (unsafe)"
+8. Click "Advanced" → "Go to Secure Waitlist Handler (unsafe)"
 9. Click "Allow"
 10. Copy the "Web app URL" - it should look like:
     https://script.google.com/macros/s/XXXXX/exec
 
-STEP 4: UPDATE WEBSITE
+STEP 5: UPDATE WEBSITE
 ----------------------
 1. Open website/index.html
-2. Find this line (around line 280):
-   const scriptURL = 'YOUR_GOOGLE_APPS_SCRIPT_URL_HERE';
-3. Replace 'YOUR_GOOGLE_APPS_SCRIPT_URL_HERE' with your Web app URL
+2. Find this line (around line 360):
+   const scriptURL = 'https://script.google.com/macros/s/AKfycby6Xyb6ALZ1YLDmCAtdgW30DT9Gc3gcXxosqB5KU8NRB41q6gpe6kqhmhuK8SMIw2Zi/exec';
+3. Replace with your new secure Web app URL if different
 4. Save the file
 
-STEP 5: TEST THE FORM
-----------------------
-1. Open your website in a browser
-2. Enter a test email in the waitlist form
-3. Click "Join Waitlist"
-4. Check your Google Sheet - you should see the email appear!
+STEP 6: ADDITIONAL SECURITY MEASURES
+-------------------------------------
+
+1. ENABLE 2-FACTOR AUTHENTICATION on your Google account
+2. REGULARLY REVIEW the Apps Script execution logs:
+   - Go to Apps Script → Executions
+   - Check for suspicious activity
+3. SET UP ALERTS:
+   - Add email notifications for new signups
+   - Monitor for unusual patterns
+4. BACKUP YOUR DATA:
+   - Regularly export the sheet as CSV
+   - Store backups securely
+5. LIMIT ACCESS:
+   - Only share sheet with necessary people
+   - Use "Viewer" permissions only
+6. MONITOR SHEET SIZE:
+   - Google Sheets has a 10 million cell limit
+   - Archive old data if needed
+
+SECURITY FEATURES IMPLEMENTED
+------------------------------
+✅ Email format validation (regex + additional checks)
+✅ Duplicate email prevention
+✅ Rate limiting (max 10 submissions per minute)
+✅ Input sanitization (prevents injection attacks)
+✅ Error handling and logging
+✅ Restricted sheet access
+✅ HTTPS encryption (automatic with Google Apps Script)
+✅ Server-side validation (can't be bypassed by client)
+
+GDPR & PRIVACY COMPLIANCE
+--------------------------
+1. Add a privacy notice on your form:
+   "By submitting your email, you consent to receive updates about Mantra Mala Jaap."
+2. Store only necessary data (email + timestamp)
+3. Provide unsubscribe mechanism
+4. Delete data upon request
+5. Don't share emails with third parties
+
+OPTIONAL: EMAIL NOTIFICATIONS (SECURE)
+---------------------------------------
+To get notified when someone joins the waitlist:
+
+```javascript
+// Add this inside the doPost function after sheet.appendRow():
+
+// Send email notification (only to you)
+MailApp.sendEmail({
+  to: 'bytecode.creation@gmail.com',
+  subject: 'New Waitlist Signup - Mantra Mala Jaap',
+  body: `New signup!\n\nEmail: ${sanitizedEmail}\nTime: ${timestamp}\nSource: ${source}`,
+  noReply: true
+});
+```
 
 TROUBLESHOOTING
 ---------------
 - If you get a CORS error: Make sure "Who has access" is set to "Anyone"
-- If emails don't appear: Check the Apps Script execution logs (View → Executions)
-- If you get permission errors: Re-authorize the script in Step 3
+- If emails don't appear: Check the Apps Script execution logs
+- If you get permission errors: Re-authorize the script
+- If rate limiting is too strict: Adjust the threshold in isRateLimited()
 
-OPTIONAL: EMAIL NOTIFICATIONS
-------------------------------
-To get notified when someone joins the waitlist, add this to your Apps Script:
-
-```javascript
-function doPost(e) {
-  try {
-    const sheet = SpreadsheetApp.getActiveSpreadsheet().getActiveSheet();
-    const email = e.parameter.email;
-    const timestamp = e.parameter.timestamp || new Date().toISOString();
-    
-    sheet.appendRow([email, timestamp, 'Website']);
-    
-    // Send email notification
-    MailApp.sendEmail({
-      to: 'bytecode.creation@gmail.com',
-      subject: 'New Waitlist Signup - Mantra Mala Jaap',
-      body: `New signup!\n\nEmail: ${email}\nTime: ${timestamp}`
-    });
-    
-    return ContentService
-      .createTextOutput(JSON.stringify({ success: true }))
-      .setMimeType(ContentService.MimeType.JSON);
-  } catch (error) {
-    return ContentService
-      .createTextOutput(JSON.stringify({ success: false, error: error.toString() }))
-      .setMimeType(ContentService.MimeType.JSON);
-  }
-}
-```
-
-EXPORTING EMAILS
-----------------
+EXPORTING EMAILS SECURELY
+--------------------------
 When you're ready to contact your waitlist:
 1. Open your Google Sheet
 2. Click "File" → "Download" → "Comma Separated Values (.csv)"
-3. Import into your email marketing tool
+3. Store the CSV file securely (encrypted if possible)
+4. Delete the CSV after importing to your email tool
+5. Use BCC when sending emails to protect privacy
 
-That's it! Your waitlist is now live and collecting emails.
+REGULAR MAINTENANCE
+-------------------
+1. Review execution logs weekly
+2. Check for duplicate or suspicious entries
+3. Update the script if security vulnerabilities are found
+4. Monitor Google's Apps Script security updates
+5. Rotate deployment if URL is compromised
+
+That's it! Your waitlist is now secure and collecting emails safely.

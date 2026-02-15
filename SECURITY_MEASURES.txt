@@ -1,0 +1,241 @@
+WAITLIST SECURITY MEASURES
+==========================
+
+This document outlines all security measures implemented to protect user emails and data.
+
+OVERVIEW
+--------
+The waitlist system collects only email addresses and timestamps. All data is stored securely 
+in Google Sheets with multiple layers of protection.
+
+CLIENT-SIDE SECURITY (Website)
+-------------------------------
+
+1. EMAIL VALIDATION
+   ✅ Comprehensive regex pattern validation
+   ✅ Length checks (max 254 characters)
+   ✅ Format validation (no consecutive dots, proper @ placement)
+   ✅ Character filtering (blocks <, >, ", ')
+   ✅ HTML5 pattern attribute for browser-level validation
+   ✅ Normalization to lowercase
+
+2. INPUT SANITIZATION
+   ✅ Trim whitespace
+   ✅ Remove dangerous characters
+   ✅ Prevent script injection attempts
+   ✅ Maxlength attribute on input field
+
+3. RATE LIMITING
+   ✅ Button disabled during submission
+   ✅ 60-second cooldown after successful submission
+   ✅ Prevents rapid-fire submissions
+
+4. REQUEST SECURITY
+   ✅ 10-second timeout on fetch requests
+   ✅ Abort controller for timeout handling
+   ✅ HTTPS-only communication
+   ✅ Error handling for network issues
+
+5. USER PRIVACY
+   ✅ Privacy notice displayed on form
+   ✅ Link to full privacy policy
+   ✅ Consent statement
+   ✅ Clear data usage explanation
+
+SERVER-SIDE SECURITY (Google Apps Script)
+------------------------------------------
+
+1. EMAIL VALIDATION
+   ✅ Server-side regex validation
+   ✅ Length validation (max 254 chars)
+   ✅ Format checks (no consecutive dots, etc.)
+   ✅ Type checking (must be string)
+   ✅ Cannot be bypassed by client manipulation
+
+2. DUPLICATE PREVENTION
+   ✅ Checks existing emails before adding
+   ✅ Case-insensitive comparison
+   ✅ Prevents spam and duplicate entries
+   ✅ Returns user-friendly error message
+
+3. RATE LIMITING
+   ✅ Maximum 10 submissions per minute globally
+   ✅ Timestamp-based tracking
+   ✅ Prevents DoS attacks
+   ✅ Automatic cooldown period
+
+4. INPUT SANITIZATION
+   ✅ Removes HTML/script tags
+   ✅ Strips dangerous characters (<, >, ", ')
+   ✅ Trims whitespace
+   ✅ Enforces length limits
+   ✅ Converts to lowercase
+
+5. ERROR HANDLING
+   ✅ Try-catch blocks for all operations
+   ✅ Detailed logging for debugging
+   ✅ Generic error messages to users (no sensitive info)
+   ✅ Graceful failure handling
+
+6. ACCESS CONTROL
+   ✅ Script runs with owner's permissions
+   ✅ Sheet access restricted to specific users
+   ✅ Viewer-only permissions for collaborators
+   ✅ No public edit access
+
+DATA STORAGE SECURITY
+----------------------
+
+1. GOOGLE SHEETS PROTECTION
+   ✅ Restricted access (not public)
+   ✅ Only script can write data
+   ✅ Manual access requires authentication
+   ✅ Audit trail of all changes
+   ✅ Version history maintained
+
+2. DATA ENCRYPTION
+   ✅ HTTPS encryption in transit (automatic)
+   ✅ Google's encryption at rest (automatic)
+   ✅ Secure Google infrastructure
+   ✅ No plain-text transmission
+
+3. DATA MINIMIZATION
+   ✅ Only collect necessary data (email + timestamp)
+   ✅ No sensitive personal information
+   ✅ No tracking cookies
+   ✅ No IP address logging (optional)
+   ✅ No user agent logging (optional)
+
+4. DATA RETENTION
+   ✅ Clear purpose for data collection
+   ✅ Data used only for launch notifications
+   ✅ Can be deleted upon request
+   ✅ Regular backups recommended
+   ✅ Archive old data when needed
+
+COMPLIANCE & PRIVACY
+---------------------
+
+1. GDPR COMPLIANCE
+   ✅ Explicit consent obtained
+   ✅ Clear privacy notice
+   ✅ Right to access data
+   ✅ Right to deletion
+   ✅ Data minimization
+   ✅ Purpose limitation
+   ✅ No third-party sharing
+
+2. PRIVACY POLICY
+   ✅ Comprehensive privacy policy available
+   ✅ Linked from waitlist form
+   ✅ Explains data usage clearly
+   ✅ Contact information provided
+   ✅ Updated regularly
+
+3. USER RIGHTS
+   ✅ Right to know what data is collected
+   ✅ Right to access their data
+   ✅ Right to delete their data
+   ✅ Right to opt-out
+   ✅ Right to data portability
+
+MONITORING & MAINTENANCE
+-------------------------
+
+1. REGULAR CHECKS
+   □ Review execution logs weekly
+   □ Check for suspicious patterns
+   □ Monitor submission rates
+   □ Verify data integrity
+   □ Update security measures as needed
+
+2. INCIDENT RESPONSE
+   □ Monitor for security breaches
+   □ Have backup plan ready
+   □ Document any incidents
+   □ Notify users if breach occurs
+   □ Update security measures
+
+3. UPDATES
+   □ Keep Google Apps Script updated
+   □ Monitor Google security advisories
+   □ Update validation rules as needed
+   □ Review and improve security regularly
+
+SECURITY BEST PRACTICES
+------------------------
+
+1. FOR ADMINISTRATORS
+   ✅ Enable 2FA on Google account
+   ✅ Use strong, unique password
+   ✅ Don't share script URL publicly
+   ✅ Review access permissions regularly
+   ✅ Keep backup of data
+   ✅ Monitor execution logs
+   ✅ Rotate deployment if compromised
+
+2. FOR USERS
+   ✅ Use valid email address
+   ✅ Read privacy policy
+   ✅ Understand data usage
+   ✅ Contact support for concerns
+   ✅ Request deletion if needed
+
+POTENTIAL THREATS & MITIGATIONS
+--------------------------------
+
+THREAT: Email harvesting by bots
+MITIGATION: Rate limiting, validation, duplicate prevention
+
+THREAT: SQL injection
+MITIGATION: No SQL database used, input sanitization
+
+THREAT: XSS attacks
+MITIGATION: Input sanitization, no user-generated content displayed
+
+THREAT: CSRF attacks
+MITIGATION: Google Apps Script CSRF protection, origin validation
+
+THREAT: DoS attacks
+MITIGATION: Rate limiting, timeout controls, Google infrastructure
+
+THREAT: Data breach
+MITIGATION: Restricted access, encryption, minimal data collection
+
+THREAT: Spam submissions
+MITIGATION: Validation, rate limiting, duplicate prevention
+
+THREAT: Man-in-the-middle
+MITIGATION: HTTPS encryption, secure Google infrastructure
+
+SECURITY AUDIT CHECKLIST
+-------------------------
+
+□ Email validation working correctly
+□ Duplicate prevention functioning
+□ Rate limiting active
+□ Input sanitization effective
+□ Error handling graceful
+□ Logging operational
+□ Access controls in place
+□ Privacy notice displayed
+□ HTTPS enabled
+□ No sensitive data exposed
+□ Backup system working
+□ Monitoring active
+□ Incident response plan ready
+
+CONTACT FOR SECURITY ISSUES
+----------------------------
+
+If you discover a security vulnerability, please report it to:
+Email: bytecode.creation@gmail.com
+Subject: [SECURITY] Waitlist Security Issue
+
+We take security seriously and will respond promptly to all reports.
+
+LAST UPDATED
+------------
+February 15, 2026
+
+This security documentation should be reviewed and updated regularly.

@@ -5,6 +5,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="description" content="Mantra Mala Jaap Support - Get help with the app, FAQs, and contact information.">
     <title>Support - Mantra Mala Jaap</title>
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
     <style>
         * {
             margin: 0;
@@ -45,6 +47,11 @@
             display: flex;
             align-items: center;
             gap: 0.5rem;
+        }
+
+        .logo svg {
+            width: 28px;
+            height: 28px;
         }
 
         nav a {
@@ -177,27 +184,36 @@
             }
         }
     </style>
+    <script>
+        // Initialize Lucide icons after page load
+        document.addEventListener('DOMContentLoaded', function() {
+            lucide.createIcons();
+        });
+    </script>
 </head>
 <body>
     <header>
         <nav>
-            <div class="logo">🌸 Mantra Mala Jaap</div>
+            <div class="logo">
+                <i data-lucide="flower-2"></i>
+                Mantra Mala Jaap
+            </div>
             <a href="index.html">← Back to Home</a>
         </nav>
     </header>
 
     <div class="container">
-        <h1>💬 Support & Help</h1>
+        <h1><i data-lucide="message-circle" style="display: inline-block; width: 40px; height: 40px; vertical-align: middle;"></i> Support & Help</h1>
         <p>Welcome to Mantra Mala Jaap Support! Find answers to common questions and get help with the app.</p>
 
         <div class="contact-box">
-            <h3>📧 Need Help?</h3>
+            <h3><i data-lucide="mail" style="display: inline-block; width: 24px; height: 24px; vertical-align: middle;"></i> Need Help?</h3>
             <p>Email us at:</p>
             <a href="mailto:bytecode.creation@gmail.com">bytecode.creation@gmail.com</a>
             <p style="margin-top: 1rem; font-size: 0.9rem;">We respond within 24-48 hours</p>
         </div>
 
-        <h2>❓ Frequently Asked Questions</h2>
+        <h2><i data-lucide="help-circle" style="display: inline-block; width: 28px; height: 28px; vertical-align: middle;"></i> Frequently Asked Questions</h2>
 
         <div class="faq-item">
             <strong>Q: Is Mantra Mala Jaap free?</strong>
@@ -289,7 +305,7 @@
             <p>A: If you encounter any issues, please email us at <a href="mailto:bytecode.creation@gmail.com" style="color: #8B4513; text-decoration: none;">bytecode.creation@gmail.com</a> with details about the problem.</p>
         </div>
 
-        <h2>🐛 Troubleshooting</h2>
+        <h2><i data-lucide="wrench" style="display: inline-block; width: 28px; height: 28px; vertical-align: middle;"></i> Troubleshooting</h2>
 
         <h3>App Crashes on Launch</h3>
         <ul>
@@ -331,7 +347,7 @@
             <li>Update the app to the latest version</li>
         </ul>
 
-        <h2>📱 System Requirements</h2>
+        <h2><i data-lucide="smartphone" style="display: inline-block; width: 28px; height: 28px; vertical-align: middle;"></i> System Requirements</h2>
 
         <h3>iOS</h3>
         <ul>
@@ -348,7 +364,7 @@
             <li>RAM: 2 GB or more recommended</li>
         </ul>
 
-        <h2>📧 Contact Us</h2>
+        <h2><i data-lucide="mail" style="display: inline-block; width: 28px; height: 28px; vertical-align: middle;"></i> Contact Us</h2>
         <p>
             For any questions, feedback, or support requests, please contact us:
         </p>
@@ -359,7 +375,7 @@
             <p style="margin-top: 1rem; font-size: 0.9rem;">Response time: 24-48 hours</p>
         </div>
 
-        <h2>🔗 Useful Links</h2>
+        <h2><i data-lucide="link" style="display: inline-block; width: 28px; height: 28px; vertical-align: middle;"></i> Useful Links</h2>
         <ul>
             <li><a href="index.html" style="color: #8B4513; text-decoration: none;">Home</a></li>
             <li><a href="privacy.html" style="color: #8B4513; text-decoration: none;">Privacy Policy</a></li>
